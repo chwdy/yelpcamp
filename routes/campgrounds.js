@@ -7,7 +7,6 @@ router.get("/", function (req, res) {
     campground.find({}).then(function (e) {
         console.log("result length: " + e.length);
         //console.log(e);
-
         res.render("./campgrounds/index", { campgrounds: e })
     }).catch(function (err) {
         console.log(err);
@@ -24,6 +23,7 @@ router.post("/",middleware.isloggedin, function (req, res) {
     newcamp.author = { id: req.user.id, username: req.user.username }
     campground.create(newcamp).then(function (e) {
         console.log("success");
+        req.flash("success","successed!")
     }).catch(function (e) {
         console.log(e);
     }).finally(function () {
@@ -37,12 +37,10 @@ router.get("/new", middleware.isloggedin, function (req, res) {
 })
 router.get("/:id", function (req, res) {
     campground.findById(req.params.id).populate("comments").then(function (e) {
-        console.log("----------");
-
-        console.log(e);
         res.render("./campgrounds/show", { campground: e })
     }).catch(function (e) {
-
+        req.flash("error",e.message)
+        res.redirect("back")
     })
 
 })
@@ -59,6 +57,8 @@ router.get("/:id/edit", middleware.checkowner,function (req, res) {
             }
             
         }).catch((e) => {
+            req.flash("error",e.message)
+
             res.redirect("/campgrounds")
         })
     } else {

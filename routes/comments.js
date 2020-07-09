@@ -22,8 +22,10 @@ router.post("/", middleware.isloggedin, function (req, res) {
             e.save()
             campground.comments.push(e)
             campground.save()
+            req.flash("success","added comment")
             res.redirect("/campgrounds/" + campground._id)
         }).catch(function (e) {
+            req.flash("error","something wrong")
             res.redirect("/campgrounds/" + campground._id)
         })
     }).catch(function (e) {
@@ -34,13 +36,11 @@ router.post("/", middleware.isloggedin, function (req, res) {
 
 //edit comment
 router.get("/:comment_id/edit", middleware.checkcommentowner,function(req,res){
-    console.log(1111);
     
     comment.findById(req.params.comment_id).then(function(foundcomment){
-
         res.render("./comments/edit",{camp_id:req.params.id,comment:foundcomment})
     }).catch((E)=>{
-        console.log(e);
+        req.flash("error",E.message)
         res.redirect("back")
     })
     
@@ -50,14 +50,17 @@ router.put("/:comment_id/edit", middleware.checkcommentowner,function(req,res){
     comment.findByIdAndUpdate(req.params.comment_id,req.body.comment).then(function(e){
        res.redirect("/campgrounds/"+req.params.id)
     }).catch((E)=>{
-        
+        req.flash("error",E.message)
+        res.redirect("back")
     })
     
 })
 router.delete("/:comment_id", middleware.checkcommentowner,function(req,res){
     comment.findByIdAndRemove(req.params.comment_id).then((e)=>{
+        req.flash("success","delete success")
         res.redirect("/campgrounds/"+req.params.id)
     }).catch((e)=>{
+        req.flash("error",e.message)
 res.redirect("back")
     })
 })

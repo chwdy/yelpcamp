@@ -6,11 +6,14 @@ var seeddb = require("./seeds")
 var passport = require("passport")
 var localstrategy = require("passport-local")
 var methodoverride = require("method-override")
-
+var flash = require("connect-flash")
 var commentroute = require("./routes/comments")
 var campgroundroute = require("./routes/campgrounds")
 var indexroute = require("./routes/index")
-
+var util = require('util');
+var campground = require("./models/campground")
+var comment = require("./models/comments")
+var user = require("./models/user")
 
 
 mongoose.connect("mongodb://localhost/yelpcamp", { useNewUrlParser: true, useUnifiedTopology: true })
@@ -18,11 +21,7 @@ app.use(bodyparser.urlencoded({ extended: true }))
 app.set("view engine", "ejs")
 app.use(express.static(__dirname + "/public"))
 app.use(methodoverride("_method"))
-
-
-var campground = require("./models/campground")
-var comment = require("./models/comments")
-var user = require("./models/user")
+app.use(flash())
 
 //seeddb()
 //====
@@ -37,10 +36,17 @@ app.use(passport.session())
 passport.use(new localstrategy(user.authenticate()))
 passport.serializeUser(user.serializeUser())
 passport.deserializeUser(user.deserializeUser())
+
+
 app.use(function (req, res, next) {
     res.locals.currentuser = req.user
+    res.locals.error = req.flash("error")   
+    res.locals.success = req.flash("success")        
     next();
 })
+
+
+
 
 //============
 //routes
