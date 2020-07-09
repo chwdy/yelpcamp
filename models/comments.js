@@ -1,7 +1,5 @@
 var mongoose = require("mongoose")
 
-mongoose.connect("mongodb://localhost/yelpcamp", { useNewUrlParser: true, useUnifiedTopology: true })
-
 var commentsschema = new mongoose.Schema({
     text: String,
     author: {
