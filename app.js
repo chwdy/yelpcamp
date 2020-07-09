@@ -60,5 +60,5 @@ app.use("/campgrounds/:id/comments", commentroute)
 app.use("/campgrounds", campgroundroute)
 app.use(indexroute)
 
-
-app.listen(3000)
+const PORT = process.env.PORT || 3000;
+app.listen(PORT)
