@@ -1,0 +1,40 @@
+<%- include ("../partials/header") %>
+
+
+
+<div class="container">
+  <header class="jumbotron">
+    <div class="container">
+      <h1>this is the campground page</h1>
+      <p>view our handpick campground from all over the world</p>
+      <a class="btn btn-lg btn-primary" href="/campgrounds/new"
+        >new campgrounds</a
+      >
+    </div>
+  </header>
+</div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-lg-12">
+      <h3>our most popular camp ground</h3>
+    </div>
+  </div>
+  <div class="row" style="display: flex; flex-wrap: wrap;">
+    <% campgrounds.forEach(camp => { %>
+    <div class="col-md-3 col-sm-6">
+      <div class="thumbnail">
+        <img src="<%= camp.image %> " alt="" srcset="" />
+        <div class="caption">
+          <h4><%= camp.name %></h4>
+          <p>
+            <a href="/campgrounds/<%= camp.id %> " class="btn btn-primary">more info</a>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <% }) %>
+  </div>
+</div>
+<%- include("../partials/footer") %>
