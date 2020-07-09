@@ -19,8 +19,9 @@ router.post("/",middleware.isloggedin, function (req, res) {
     var name = req.body.name
     var img = req.body.img
     var des = req.body.description
+    var price = req.body.price
     var newcamp = { name: name, image: img, description: des }
-    newcamp.author = { id: req.user.id, username: req.user.username }
+    newcamp.author = { id: req.user.id, username: req.user.username ,price:price}
     campground.create(newcamp).then(function (e) {
         console.log("success");
         req.flash("success","successed!")
